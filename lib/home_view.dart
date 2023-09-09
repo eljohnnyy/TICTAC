@@ -12,7 +12,7 @@ class _HomeViewState extends State<HomeView> {
   String activeplayer = 'X';
   bool gameover = false;
   int turn = 0;
-  String result = 'xxxxxxxx';
+  String result = '';
   Game game = Game();
   bool isswitch = false;
   @override
@@ -92,8 +92,8 @@ class _HomeViewState extends State<HomeView> {
                   gameover = false;
                   turn = 0;
                   result = '';
-                  Player.playerx=[];
-                  Player.playery=[];
+                  Player.playerx = [];
+                  Player.playery = [];
                 });
               },
               icon: const Icon(Icons.replay),
@@ -105,28 +105,29 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  _ontap(int index)async {
-    
-    if((!Player.playerx.contains(index)||Player.playerx.isEmpty)&&(!Player.playery.contains(index)||Player.playery.isEmpty)){
-     game.playgame(index, activeplayer);
+  _ontap(int index) async {
+    if ((!Player.playerx.contains(index) || Player.playerx.isEmpty) &&
+        (!Player.playery.contains(index) || Player.playery.isEmpty)) {
+      game.playgame(index, activeplayer);
       update();
     }
-    if(!isswitch&&!gameover){
-     await game.autoplay(activeplayer);
+    if (!isswitch && !gameover&&turn!=9) {
+      await game.autoplay(activeplayer);
       update();
     }
   }
 
   void update() {
     setState(() {
-     activeplayer= activeplayer=='X'?'O':'X';
-     String check=game.checkwinner();
-     if(check!=''){
-      result='$check is the winner';
-     }
-     else{
-      result='GAME OVER';
-     }
+      activeplayer = activeplayer == 'X' ? 'O' : 'X';
+      turn++;
+      String check = game.checkwinner();
+      if (check != '') {
+        gameover = true;
+        result = '$check is the winner';
+      } else if (!gameover && turn == 9) {
+        result = 'GAME OVER';
+      }
     });
   }
 }
