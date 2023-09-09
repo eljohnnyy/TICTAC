@@ -105,14 +105,28 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  _ontap(int index) {
-    game.playgame(index, activeplayer);
-    update();
+  _ontap(int index)async {
+    
+    if((!Player.playerx.contains(index)||Player.playerx.isEmpty)&&(!Player.playery.contains(index)||Player.playery.isEmpty)){
+     game.playgame(index, activeplayer);
+      update();
+    }
+    if(!isswitch&&!gameover){
+     await game.autoplay(activeplayer);
+      update();
+    }
   }
 
   void update() {
     setState(() {
      activeplayer= activeplayer=='X'?'O':'X';
+     String check=game.checkwinner();
+     if(check!=''){
+      result='$check is the winner';
+     }
+     else{
+      result='GAME OVER';
+     }
     });
   }
 }
